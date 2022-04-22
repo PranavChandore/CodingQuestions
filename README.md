@@ -33,3 +33,8 @@ so here same apporach just like we find to middle element then creat prev null  
   -----try creat entry pointer points to head and entry and slow both now travel 
                 //from its starting position and when they are equal thats begingig point of 
                 //loop node
+234.Palindrome linked list <https://leetcode.com/problems/palindrome-linked-list/>
+  .....1)finde mid if even stop at before mid
+      2)then reverse from mid next ;
+    3)mid->next =revers(temp) where temp store temp->next;
+  4)compare data of given two halfs
