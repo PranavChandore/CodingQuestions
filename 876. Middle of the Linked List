@@ -3,7 +3,7 @@
 Given the head of a singly linked list, return the middle node of the linked list.
 
 If there are two middle nodes, return the second middle node.
-<a> img src =https://assets.leetcode.com/uploads/2021/07/23/lc-midlist1.jpg <\a>
+
 Example 1:
 
 
