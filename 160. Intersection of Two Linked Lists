@@ -1,0 +1,169 @@
+160. Intersection of Two Linked Lists
+Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+
+For example, the following two linked lists begin to intersect at node c1:
+
+
+The test cases are generated such that there are no cycles anywhere in the entire linked structure.
+
+Note that the linked lists must retain their original structure after the function returns.
+
+Custom Judge:
+
+The inputs to the judge are given as follows (your program is not given these inputs):
+
+intersectVal - The value of the node where the intersection occurs. This is 0 if there is no intersected node.
+listA - The first linked list.
+listB - The second linked list.
+skipA - The number of nodes to skip ahead in listA (starting from the head) to get to the intersected node.
+skipB - The number of nodes to skip ahead in listB (starting from the head) to get to the intersected node.
+The judge will then create the linked structure based on these inputs and pass the two heads, headA and headB to your program. If you correctly return the intersected node, then your solution will be accepted.
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        
+        
+        if(headA ==NULL || headB==NULL){
+
+        return NULL;
+        }
+        
+        ListNode* a= headA;
+        ListNode* b= headB;
+        while(a !=b){
+
+        a= a==NULL ? headB : a-> next;
+        b = b==NULL ? headA : b->next;    
+        
+        }
+    return a;
+    }
+  
+};
+
+
+
+
+1) Brute Force
+INTUITION: -
+Two loop approach i.e. iterate over both the lists and simultaneously check for any matching nodes between them;
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        while(headB != NULL){
+            ListNode* temp = headA;
+            while(temp != NULL){
+                if(temp == headB){
+                    return temp;
+                }
+                temp = temp->next;
+            }
+            headB = headB->next;
+        }
+        return NULL;
+    }
+};
+2) Hashing
+(Better than brute force wrt time complexity but uses extra space)
+INTUITION: -
+Simply traverse through one of the linked litsts and store all its nodes into a hashset;
+Traverse through the other linked list while simultaneously checking for the corresponding value in the hashset, if found return the value else NULL;
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        unordered_set<ListNode *> hs;
+        ListNode *temp = headA;
+        while(temp != NULL){
+            hs.insert(temp);
+            temp = temp->next;            
+        }
+        temp = headB;
+        while(temp != NULL){
+            if(hs.find(temp) != hs.end()){
+                return temp;
+            }
+            temp = temp->next;
+        }
+        return NULL;
+    }
+};
+3) Better
+INTUITION: -
+Find the length of both linked lists, whichever linked list is longer shorten it to the length of the other (why? because the common part of the linked lists must lie in the same length of both linked lists and if it lies in the part that we are about to remove then it would not form a junction)
+Then traverse both linked lists simultaneously if a common node found return it else NULL;
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* t1 = headA;
+        ListNode* t2 = headB;
+        if(t1 == NULL) return NULL;
+        if(t2 == NULL) return NULL;
+        int c1 = 0, c2 = 0;
+        while(t1 != NULL){
+            c1++;
+            t1 = t1->next;
+        }
+        while(t2 != NULL){
+            c2++;
+            t2 = t2->next;
+        }
+        t1 = headA;
+        t2 = headB;
+        if(c1 > c2){
+            while(c1 != c2){
+                c1--;
+                t1 = t1->next;
+            }
+        }
+        else if(c1 < c2){
+           while(c2 != c1){
+                c2--;
+                t2 = t2->next;
+            }
+        }
+        while(t1 != t2){
+            t1 = t1->next;
+            t2 = t2->next;
+        }
+        return t1;
+        }
+};
+4) Optimal
+INTUITION: -
+Instead of shortening one of the linked lists simply take two pointers and traverse both linked lists, whenever one of the pointers goes to NULL point it to the starting of the other linked list and traverse again, keep repeating unless a common node is struck upon;
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *t1 = headA;
+        ListNode *t2 = headB;
+        while(t1 != t2){
+            if(t1 != NULL){
+                t1 = t1->next;
+            }
+            else{
+                t1 = headB;
+            }
+            if(t2 != NULL){
+                t2 = t2->next;
+            }
+            else{
+                t2 = headA;
+            }
+        }
+        return t1;
+    }
+};
